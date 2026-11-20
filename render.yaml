@@ -1,0 +1,12 @@
+# Render Blueprint: the hosted demo of Pattern Shop (free plan, built from the Dockerfile).
+# Free web services sleep after 15 minutes without traffic; the first request then takes up to about a minute.
+# Framework CI does not depend on it: CI starts the ghcr.io image next to the tests.
+services:
+  - type: web
+    name: pattern-shop
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass
