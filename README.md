@@ -17,6 +17,14 @@ so they test one application I control instead of public demo sites that can be 
 | Hosted demo | https://pattern-shop.onrender.com: Render free plan, from [`render.yaml`](render.yaml); it sleeps when idle, so the first request can take about a minute |
 | Tests | 19 JUnit 6 tests over real HTTP, plus a smoke test of the built image |
 
+## Pages
+
+| Sign in | Locked user |
+|---|---|
+| ![Sign-in page](docs/images/login.png) | ![Sign-in page showing the locked-out message](docs/images/login-locked.png) |
+| **Cart** | **Order complete** |
+| ![Cart with two products and the total](docs/images/cart.png) | ![Order confirmation with the order number](docs/images/complete.png) |
+
 ## How the frameworks use it
 
 ```text
