@@ -12,7 +12,7 @@ so they test one application I control instead of public demo sites that can be 
 
 | | |
 |---|---|
-| Runtime | Java 21, JDK only (`com.sun.net.httpserver`), no dependencies; starts in under a second |
+| Runtime | JDK only (`com.sun.net.httpserver`), no dependencies; compiled for Java 21, runs on Java 25 in the image; starts in under a second |
 | Image | `ghcr.io/niranjankagri/pattern-shop-demo-app:latest` (and `:sha-<commit>`), published by CI from `main` |
 | Hosted demo | https://pattern-shop.onrender.com: Render free plan, from [`render.yaml`](render.yaml); it sleeps when idle, so the first request can take about a minute |
 | Tests | 19 JUnit 6 tests over real HTTP, plus a smoke test of the built image |
