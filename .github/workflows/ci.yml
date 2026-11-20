@@ -60,7 +60,8 @@ jobs:
         run: bash scripts/smoke.sh http://localhost:8080
       - name: Image size in the job summary
         if: ${{ !cancelled() }}
-        run: docker image inspect pattern-shop:ci --format 'Image size: {{.Size}} bytes' >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          docker image inspect pattern-shop:ci --format 'Image size: {{.Size}} bytes' >> "$GITHUB_STEP_SUMMARY"
       - name: Publish the tested image (main only)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         env:
