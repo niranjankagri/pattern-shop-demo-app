@@ -1,5 +1,5 @@
 # Pattern Shop image: built and tested by CI, published to ghcr.io, run by framework CI jobs and by Render.
-FROM eclipse-temurin:21-jdk AS build
+FROM eclipse-temurin:25-jdk AS build
 WORKDIR /src
 COPY .mvn .mvn
 COPY mvnw pom.xml ./
@@ -8,7 +8,7 @@ COPY src src
 # The tests already ran in CI's own job; the image only needs the jar
 RUN ./mvnw -B -q package -DskipTests
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 # Links the ghcr.io package to this repository (its page, README and permissions)
 LABEL org.opencontainers.image.source="https://github.com/niranjankagri/pattern-shop-demo-app" \
       org.opencontainers.image.description="Pattern Shop: a demo shop for test automation frameworks" \
