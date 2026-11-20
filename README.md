@@ -6,13 +6,15 @@ A small shop built to be tested: sign-in, product list, cart and checkout pages,
 different APIs (REST/JSON, SOAP-style XML and a legacy text format). It is shared by my test automation frameworks,
 so they test one application I control instead of public demo sites that can be slow or down.
 
+**Live demo: https://pattern-shop.onrender.com** (sign in as `standard_user` / `secret_sauce`)
+
 ![Product list](docs/images/products.png)
 
 | | |
 |---|---|
 | Runtime | Java 21, JDK only (`com.sun.net.httpserver`), no dependencies; starts in under a second |
 | Image | `ghcr.io/niranjankagri/pattern-shop-demo-app:latest` (and `:sha-<commit>`), published by CI from `main` |
-| Hosted demo | Render free plan, from [`render.yaml`](render.yaml); sleeps when idle, so the first request can take about a minute |
+| Hosted demo | https://pattern-shop.onrender.com: Render free plan, from [`render.yaml`](render.yaml); it sleeps when idle, so the first request can take about a minute |
 | Tests | 19 JUnit 6 tests over real HTTP, plus a smoke test of the built image |
 
 ## How the frameworks use it
@@ -21,7 +23,7 @@ so they test one application I control instead of public demo sites that can be 
 framework CI job ──▶ docker run ghcr.io/.../pattern-shop-demo-app ──▶ tests against http://localhost:8080
                      (fresh shop per job: fast, no shared data, never down)
 
-people, demos     ──▶ hosted demo on Render
+people, demos     ──▶ hosted demo on Render (https://pattern-shop.onrender.com)
 ```
 
 Framework CI never depends on the hosted demo. Used by:
@@ -75,7 +77,8 @@ The hosted demo keeps at most 10,000 sessions and then starts over.
    [`scripts/smoke.sh`](scripts/smoke.sh) (sign-in, cart, all three APIs). On `main` the tested image is published to
    ghcr.io as `:latest` and `:sha-<commit>`.
 
-`scripts/smoke.sh <url>` also checks the hosted demo; it waits up to 90 s for a sleeping free instance.
+`scripts/smoke.sh <url>` also checks the hosted demo (`bash scripts/smoke.sh https://pattern-shop.onrender.com`, passed on
+20 Nov 2026); it waits up to 90 s for a sleeping free instance.
 
 ## License
 
