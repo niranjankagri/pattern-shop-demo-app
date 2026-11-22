@@ -15,7 +15,7 @@ so they test one application I control instead of public demo sites that can be 
 | Runtime | JDK only (`com.sun.net.httpserver`), no dependencies; compiled for Java 21, runs on Java 25 in the image; starts in under a second |
 | Image | `ghcr.io/niranjankagri/pattern-shop-demo-app:latest` (and `:sha-<commit>`), published by CI from `main` |
 | Hosted demo | https://pattern-shop.onrender.com: Render free plan, from [`render.yaml`](render.yaml); it sleeps when idle, so the first request can take about a minute |
-| Tests | 30 JUnit 6 tests over real HTTP, plus a smoke test of the built image |
+| Tests | 31 JUnit 6 tests over real HTTP, plus a smoke test of the built image |
 
 ## Pages
 
@@ -61,7 +61,8 @@ user."; empty fields get "User name and password are required." Two users behave
 `slow_user` is signed in only after 3 seconds (for waits and timeouts). Opening a page behind the sign-in while
 signed out leads to the sign-in page with "Please sign in to see that page."
 
-**Pages** (plain HTML forms, no JavaScript; every element a test needs has a `data-testid`):
+**Pages** (plain HTML forms, no JavaScript; every element a test needs has a `data-testid`, and every form field
+also has an `id`, a `name`, a placeholder and a label, so locator strategies can be compared):
 
 | Path | Content | Test ids |
 |---|---|---|
@@ -94,7 +95,7 @@ The hosted demo keeps at most 10,000 sessions and then starts over.
 
 [`ci.yml`](.github/workflows/ci.yml) on every pull request, push to `main`, weekly (Friday 23:00 UTC) and on demand:
 
-1. **App tests**: `./mvnw verify` (30 tests over HTTP).
+1. **App tests**: `./mvnw verify` (31 tests over HTTP).
 2. **Image build and smoke test**: builds the Docker image, waits for its health check, runs
    [`scripts/smoke.sh`](scripts/smoke.sh) (sign-in, cart, the two-step checkout, all three APIs). On `main` the tested image is published to
    ghcr.io as `:latest` and `:sha-<commit>`.

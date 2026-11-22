@@ -88,6 +88,14 @@ class ShopAppTest {
         }
 
         @Test
+        @DisplayName("APP-108 the form fields have an id, name, placeholder and test id")
+        void fieldAttributes() throws Exception {
+            assertThat(get("/login").body()).contains(
+                    "<input id=\"username\" name=\"username\" placeholder=\"User name\" data-testid=\"username\"",
+                    "<input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Password\" data-testid=\"password\"");
+        }
+
+        @Test
         @DisplayName("APP-104 empty fields are required")
         void emptyFields() throws Exception {
             assertThat(login("", "").headers().firstValue("Location")).hasValue("/login?error=required");
