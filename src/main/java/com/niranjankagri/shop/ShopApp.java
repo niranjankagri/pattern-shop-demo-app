@@ -630,6 +630,8 @@ public final class ShopApp implements AutoCloseable {
     }
 
     private static void html(HttpExchange ex, String title, String body) throws IOException {
+        // Never cached: after sign-out, the browser's Back button must not show a page from the session
+        ex.getResponseHeaders().set("Cache-Control", "no-store");
         send(ex, 200, "text/html", """
                 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>%s | Pattern Shop</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1"><style>%s</style>

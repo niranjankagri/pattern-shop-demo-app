@@ -15,7 +15,7 @@ so they test one application I control instead of public demo sites that can be 
 | Runtime | JDK only (`com.sun.net.httpserver`), no dependencies; compiled for Java 21, runs on Java 25 in the image; starts in under a second |
 | Image | `ghcr.io/niranjankagri/pattern-shop-demo-app:latest` (and `:sha-<commit>`), published by CI from `main` |
 | Hosted demo | https://pattern-shop.onrender.com: Render free plan, from [`render.yaml`](render.yaml); it sleeps when idle, so the first request can take about a minute |
-| Tests | 31 JUnit 6 tests over real HTTP, plus a smoke test of the built image |
+| Tests | 32 JUnit 6 tests over real HTTP, plus a smoke test of the built image |
 
 ## Pages
 
@@ -89,13 +89,14 @@ the page it was added from (the product page, or the list in the same sort order
 | `GET /health` | `ok` | container and hosting health checks |
 
 Sessions and carts are kept in memory per browser session (cookie `SESSION`), so parallel tests do not share a cart.
-The hosted demo keeps at most 10,000 sessions and then starts over.
+The hosted demo keeps at most 10,000 sessions and then starts over. Pages are sent with `Cache-Control: no-store`,
+so after signing out the browser's Back button does not show a page of the session.
 
 ## CI
 
 [`ci.yml`](.github/workflows/ci.yml) on every pull request, push to `main`, weekly (Friday 23:00 UTC) and on demand:
 
-1. **App tests**: `./mvnw verify` (31 tests over HTTP).
+1. **App tests**: `./mvnw verify` (32 tests over HTTP).
 2. **Image build and smoke test**: builds the Docker image, waits for its health check, runs
    [`scripts/smoke.sh`](scripts/smoke.sh) (sign-in, cart, the two-step checkout, all three APIs). On `main` the tested image is published to
    ghcr.io as `:latest` and `:sha-<commit>`.

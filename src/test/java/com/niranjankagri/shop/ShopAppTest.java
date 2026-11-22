@@ -121,6 +121,14 @@ class ShopAppTest {
         }
 
         @Test
+        @DisplayName("APP-109 pages are never cached, so Back after sign-out does not show them")
+        void notCached() throws Exception {
+            login("standard_user", ShopApp.PASSWORD);
+            assertThat(get("/products").headers().firstValue("Cache-Control")).hasValue("no-store");
+            assertThat(get("/login").headers().firstValue("Cache-Control")).hasValue("no-store");
+        }
+
+        @Test
         @DisplayName("APP-107 slow_user is signed in, but only after the delay")
         void slowUser() throws Exception {
             long start = System.nanoTime();
