@@ -33,7 +33,8 @@ import java.util.concurrent.Executors;
  *   <li>{@code POST /soap/catalog}: a SOAP-style XML envelope</li>
  *   <li>{@code GET /legacy/catalog?q=ALL}: pipe-separated text lines, read through {@code LegacyInventorySdk}</li>
  * </ul>
- * The HTML pages use plain forms (no JavaScript), and every element a test needs has a {@code data-testid}: sign-in,
+ * The HTML pages use plain forms (no JavaScript), and every element a test needs has a {@code data-testid} (form
+ * fields also have an {@code id}, a {@code name}, a placeholder and a label, for comparing locator strategies): sign-in,
  * a sortable product list with pictures, a page per product, the cart, and a two-step checkout (your information,
  * then an overview with item total, tax and total). Two demo users behave differently on purpose:
  * {@code problem_user} sees the same placeholder picture for every product, and {@code slow_user} waits
@@ -194,8 +195,8 @@ public final class ShopApp implements AutoCloseable {
                 <h1 data-testid="login-title">Sign in</h1>
                 %s
                 <form method="post" action="/login">
-                  <label>User name <input name="username" data-testid="username" autocomplete="off"></label>
-                  <label>Password <input name="password" type="password" data-testid="password"></label>
+                  <label>User name <input id="username" name="username" placeholder="User name" data-testid="username" autocomplete="off"></label>
+                  <label>Password <input id="password" name="password" type="password" placeholder="Password" data-testid="password"></label>
                   <button type="submit" data-testid="login-button">Sign in</button>
                 </form>""".formatted(errorHtml));
     }
@@ -359,9 +360,9 @@ public final class ShopApp implements AutoCloseable {
                 <h1 data-testid="checkout-title">Checkout: your information</h1>
                 %s
                 <form method="post" action="/checkout/info">
-                  <label>First name <input name="firstName" data-testid="first-name" value="%s"></label>
-                  <label>Last name <input name="lastName" data-testid="last-name" value="%s"></label>
-                  <label>Postal code <input name="postalCode" data-testid="postal-code" value="%s"></label>
+                  <label>First name <input id="first-name" name="firstName" placeholder="First name" data-testid="first-name" value="%s"></label>
+                  <label>Last name <input id="last-name" name="lastName" placeholder="Last name" data-testid="last-name" value="%s"></label>
+                  <label>Postal code <input id="postal-code" name="postalCode" placeholder="Postal code" data-testid="postal-code" value="%s"></label>
                   <button type="submit" data-testid="continue">Continue</button>
                   <a href="/cart" data-testid="cancel">Cancel</a>
                 </form>""".formatted(errorHtml, escape(buyer.getOrDefault("firstName", "")),
@@ -629,6 +630,8 @@ public final class ShopApp implements AutoCloseable {
     }
 
     private static void html(HttpExchange ex, String title, String body) throws IOException {
+        // Never cached: after sign-out, the browser's Back button must not show a page from the session
+        ex.getResponseHeaders().set("Cache-Control", "no-store");
         send(ex, 200, "text/html", """
                 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>%s | Pattern Shop</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1"><style>%s</style>
