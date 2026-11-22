@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Smoke test of a running Pattern Shop: health, login, cart and the three catalog APIs.
+# Smoke test of a running Pattern Shop: health, login, cart, checkout and the three catalog APIs.
 # Usage: scripts/smoke.sh http://localhost:8080   (waits up to SMOKE_WAIT_SECONDS for /health, default 90:
 #        the hosted demo on Render's free plan may need about a minute to wake up)
 set -euo pipefail
@@ -25,6 +25,14 @@ ok "login"
 curl -sS -m 10 -b "$jar" -o /dev/null -d 'id=P-100' "$base/cart/add"
 curl -sS -m 10 -b "$jar" "$base/cart" | grep -q 'data-testid="cart-total">\$29.99<' || fail "cart total"
 ok "cart"
+
+loc=$(curl -sS -m 10 -b "$jar" -o /dev/null -w '%{redirect_url}' -X POST "$base/checkout")
+[[ "$loc" == */checkout/info ]] || fail "checkout asks for the buyer (got $loc)"
+curl -sS -m 10 -b "$jar" -o /dev/null -d 'firstName=Smoke&lastName=Test&postalCode=10115' "$base/checkout/info"
+curl -sS -m 10 -b "$jar" "$base/checkout/overview" | grep -q 'data-testid="total">\$32.39<' || fail "overview total (29.99 + 2.40 tax)"
+loc=$(curl -sS -m 10 -b "$jar" -o /dev/null -w '%{redirect_url}' -X POST "$base/checkout/finish")
+[[ "$loc" == *"/complete?order=ORD-"* ]] || fail "finish confirms an order (got $loc)"
+ok "checkout"
 
 curl -fsS -m 10 "$base/api/products" | grep -q '"id":"P-400"' || fail "REST catalog"
 ok "REST catalog"
