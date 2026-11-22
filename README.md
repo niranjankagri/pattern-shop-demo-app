@@ -39,8 +39,13 @@ people, demos     ──▶ hosted demo on Render (https://pattern-shop.onrender
 ```
 
 Framework CI never depends on the hosted demo. Used by:
-[design-patterns-test-framework](https://github.com/niranjankagri/design-patterns-test-framework) (Selenium and
-Playwright for Java).
+
+| Framework | Tool | What it tests here |
+|---|---|---|
+| [design-patterns-test-framework](https://github.com/niranjankagri/design-patterns-test-framework) | Selenium and Playwright for Java | sign-in per user, catalog, cart, checkout, the three catalog APIs |
+| [playwright-framework](https://github.com/niranjankagri/playwright-framework) | Playwright for Java, TestNG | login, sorting, product pages, cart, checkout, images, network, sessions |
+| [robot-framework-automation](https://github.com/niranjankagri/robot-framework-automation) | Robot Framework, SeleniumLibrary | login and its errors, sorting, cart, checkout with tax |
+| [cucumber-bdd-demo](https://github.com/niranjankagri/cucumber-bdd-demo) | Cucumber, Selenium | the login outline: standard, locked, problem and slow user |
 
 ## Run it
 
